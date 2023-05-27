@@ -2,10 +2,85 @@
 <html>
 <head>
     <title>Chet's</title>
-    <style></style>
-    <script></script>
+    <style>
+        table, td{
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+        #databox {
+            height: 80px;
+        }
+    </style>
+    <script>
+
+        var number = [];
+        let i = 0;
+        let d = 0;
+        let date = 28;
+
+        function get(id){
+            return document.getElementById(id);
+        }
+
+        function onStart(){
+            do{
+                number[i] = [date];
+                if(date < 30){
+                    date += 1
+                }else{
+                    date = 1
+                }
+                i = i+1
+            }while(i < 100);
+            do{
+                get(d).innerHTML = number[d]
+                d += 1
+            }while(d < 14)
+        }
+
+        function doForm(){
+            var enteredEvent = get("entered-event").value;
+            var enteredDate = parseInt(get("entered-date").value);
+            
+        }
+    </script>
 </head>
-<body>
-    <h1>Hello everyone!</h1>
+<body onload="onStart()">
+    <table style="width:100%">
+        <tr>
+            <td>Sunday</td>
+            <td>Monday</td>
+            <td>Tuesday</td>
+            <td>Wednesday</td>
+            <td>Thursday</td>
+            <td>Friday</td>
+            <td>Saturday</td>
+        </tr>
+        <tr id="databox">
+            <td id = "0"></td>
+            <td id = "1"></td>
+            <td id = "2"></td>
+            <td id = "3"></td>
+            <td id = "4"></td>
+            <td id = "5"></td>
+            <td id = "6"></td>
+        </tr>
+        <tr id="databox">
+            <td id = "7"></td>
+            <td id = "8"></td>
+            <td id = "9"></td>
+            <td id = "10"></td>
+            <td id = "11"></td>
+            <td id = "12"></td>
+            <td id = "13"></td>
+        </tr>
+    </table>
+    <form action="doForm()">
+        <label for="entered-event">Event:</label><br>
+        <input type="text" id="entered-event" name="entered-event"><br>
+        <label for="entered-date">Date:</label><br>
+        <input type="text" id="entered-date" name="entered-date"><br><br>
+        <input type="submit" value="Submit">
+    </form>
 </body>
 </html>
