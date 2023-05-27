@@ -16,37 +16,41 @@
         var number = [];
         let i = 0;
         let d = 0;
-        let date = 28;
+        var rebmun = []
+        var start = new Date("May 27, 2023")
+        var startDate = start.getDate();
 
         function get(id){
             return document.getElementById(id);
         }
 
         function onStart(){
+            //When the page loads, the dates on the calendar are set with this loop
             do{
-                number[i] = [date];
-                if(date < 30){
-                    date += 1
-                }else{
-                    date = 1
-                }
-                i = i+1
-            }while(i < 100);
-            do{
-                get(d).innerHTML = number[d]
-                d += 1
-            }while(d < 14)
+
+                number[i] = [startDate];
+                start.setDate(startDate + 1)
+                startDate = start.getDate();
+                get(i).innerHTML = number[i];
+
+                rebmun[startDate] = i;
+                i = i + 1
+            }while(i < 14);
         }
 
         function doForm(){
             var enteredEvent = get("entered-event").value;
             var enteredDate = parseInt(get("entered-date").value);
-            
+            if(rebmun[enteredDate +1]){
+                get(rebmun[enteredDate +1]).innerHTML = enteredDate + ": " + enteredEvent;
+            }else{
+                alert("Date " + enteredDate + " is not a valid date.");
+            }
         }
     </script>
 </head>
 <body onload="onStart()">
-    <table style="width:100%">
+    <table style="width:100%" id="table">
         <tr>
             <td>Sunday</td>
             <td>Monday</td>
@@ -75,12 +79,11 @@
             <td id = "13"></td>
         </tr>
     </table>
-    <form action="doForm()">
-        <label for="entered-event">Event:</label><br>
-        <input type="text" id="entered-event" name="entered-event"><br>
-        <label for="entered-date">Date:</label><br>
-        <input type="text" id="entered-date" name="entered-date"><br><br>
-        <input type="submit" value="Submit">
-    </form>
+
+    <label for="entered-event">Event:</label><br>
+    <input type="text" id="entered-event"><br>
+    <label for="entered-date">Date:</label><br>
+    <input type="text" id="entered-date"><br><br>
+    <input type="submit" value="Submit" onclick="doForm()">
 </body>
 </html>

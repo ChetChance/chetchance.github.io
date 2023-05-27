@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Test Page</title>
+        <script>
+            let i = 0;
+            let o = 0;
+            function onload(){
+                do{
+                    var calanderTable = document.createElement("table");
+                    calanderTable.id = "theTable" + i;
+                    calanderTable.style = "border: 1px solid black; border-collapse: collapse; width:100%; height: 100%;";
+                    document.body.append(calanderTable);
+                    var row1 = document.createElement("tr");
+                    row1.id = "theRow" + i;
+                    row1.style = "";
+                    document.getElementById("theTable" + i).appendChild(row1);
+                    o = 0
+                    do{
+                        var tableData = document.createElement("td");
+                        tableData.id = "tabda" + i + o;
+                        tableData.style="border: 1px solid black;";
+                        document.getElementById("theRow" + i).appendChild(tableData);
+                        document.getElementById("tabda" + i + o).innerHTML = "" + i + o;
+                        o += 1
+                    }while(o < 4);
+                    i += 1;
+                }while(i < 10);
+            }
+        </script>
+    </head>
+    <body onload="onload()">
+    </body>
+</html>
