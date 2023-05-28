@@ -30,8 +30,12 @@
                 if (type == "y"){
                     return d.getFullYear();
                 }
+                if (type == "fDay"){
+                    var d1 = new Date(aDate + " 1");
+                    return days[d1.getDay() - 1];
+                }
             }
-            alert(o_Date("all", "July 3, 2023"));
+            alert(o_Date("fDay", "July"));
             function onload(){
                 var calanderTable = document.createElement("table");
                 calanderTable.id = "theTable";
