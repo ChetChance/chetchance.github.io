@@ -5,16 +5,43 @@
         <script>
             let i = 0;
             let o = 0;
+
+
+            function o_Date(type, aDate){
+                var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+                var days = ["Sunday", "Monday",  "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+                var d = new Date(aDate);
+                if (type == "m" ){
+                    return months[d.getMonth()];
+                }else if (type == "mInt" ){
+                    return d.getMonth();
+                }
+                if (type == "d"){
+                    return days[d.getDay()];
+                }else if (type == "dInt"){
+                    return d.getDay();
+                }
+                if (type == "DofM"){
+                    return d.getDate();
+                }
+                if (type == "all"){
+                    return days[d.getDay()] + " " + months[d.getMonth()] +  " " + d.getDate() + ", " + d.getFullYear();
+                }
+                if (type == "y"){
+                    return d.getFullYear();
+                }
+            }
+            alert(o_Date("all", "July 3, 2023"));
             function onload(){
+                var calanderTable = document.createElement("table");
+                calanderTable.id = "theTable";
+                calanderTable.style = "border: 1px solid black; border-collapse: collapse; width:100%; height: 100%;";
+                document.body.append(calanderTable);
                 do{
-                    var calanderTable = document.createElement("table");
-                    calanderTable.id = "theTable" + i;
-                    calanderTable.style = "border: 1px solid black; border-collapse: collapse; width:100%; height: 100%;";
-                    document.body.append(calanderTable);
                     var row1 = document.createElement("tr");
                     row1.id = "theRow" + i;
                     row1.style = "";
-                    document.getElementById("theTable" + i).appendChild(row1);
+                    document.getElementById("theTable").appendChild(row1);
                     o = 0
                     do{
                         var tableData = document.createElement("td");
@@ -23,9 +50,10 @@
                         document.getElementById("theRow" + i).appendChild(tableData);
                         document.getElementById("tabda" + i + o).innerHTML = "" + i + o;
                         o += 1
-                    }while(o < 4);
+                    }while(o < 7);
                     i += 1;
-                }while(i < 10);
+                }while(i < 2);
+            
             }
         </script>
     </head>
