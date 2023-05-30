@@ -10,7 +10,7 @@
             function o_Date(type, aDate){
                 var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
                 var days = ["Sunday", "Monday",  "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-                var d = new Date(aDate);
+                var d = new Date();
                 if (type == "m" ){
                     return months[d.getMonth()];
                 }else if (type == "mInt" ){
@@ -35,7 +35,7 @@
                     return days[d1.getDay() - 1];
                 }
             }
-            alert(o_Date("fDay", "July"));
+            alert(o_Date("all"));
             function onload(){
                 var calanderTable = document.createElement("table");
                 calanderTable.id = "theTable";
