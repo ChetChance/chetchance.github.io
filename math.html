@@ -1,0 +1,55 @@
+<html>
+<head>
+    <title>Document</title>
+    <style>
+        body{
+            margin: 0%;
+        }
+    </style>
+    <script>
+        var c = document.createElement("canvas");
+        c.style = "display: block; border: 2px solid black;";
+        c.id = "theCan";
+        var ctx = c.getContext("2d");
+        var x = 600;
+        var y = 200;
+
+        function get(id){
+            return document.getElementById(id);
+        }
+
+        function doStart(){
+            //document.body.appendChild(c);
+            document.body.insertBefore(c,get("xNum"));
+            get("theCan").width = window.innerWidth;
+            get("theCan").height = window.innerHeight / 2;
+        }
+
+        function doLoad(){
+            x = get("xNum").value * 10;
+            y = get("theCan").height - get("yNum").value * 10;
+        }
+
+        function onDraw(){
+            ctx.clearRect(0,0,c.width,c.height);
+            let i = 0;
+            do{
+                ctx.beginPath();
+                ctx.moveTo()
+                i += i + 10
+            }while(i < get("theCan").width);
+            ctx.beginPath();
+            ctx.moveTo(0, window.innerHeight / 2);
+            ctx.lineTo(x, y);
+            ctx.closePath();
+            ctx.stroke();
+        }
+        setInterval(onDraw,10);
+    </script>
+</head>
+<body onload="doStart()">
+    <input id = "xNum" value = "Enter X Value Here">
+    <input id = "yNum" value = "Enter Y Value Here">
+    <input type="button" value = "Enter" onclick="doLoad()">
+</body>
+</html>
