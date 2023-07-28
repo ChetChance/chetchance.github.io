@@ -22,12 +22,12 @@
             //document.body.appendChild(c);
             document.body.insertBefore(c,get("xNum"));
             get("theCan").width = window.innerWidth;
-            get("theCan").height = window.innerHeight / 2;
+            get("theCan").height = 500;
         }
 
         function doLoad(){
-            x = get("xNum").value * 10;
-            y = get("theCan").height - get("yNum").value * 10;
+            x = get("xNum").value * 50;
+            y = get("theCan").height - get("yNum").value * 50;
         }
 
         function onDraw(){
@@ -35,11 +35,22 @@
             let i = 0;
             do{
                 ctx.beginPath();
-                ctx.moveTo()
-                i += i + 10
+                ctx.moveTo(i, 0);
+                ctx.lineTo(i, c.height);
+                i += 50;
+                ctx.stroke();
             }while(i < get("theCan").width);
+            i=0
+            do{
+                ctx.beginPath();
+                ctx.moveTo(0, i);
+                ctx.lineTo(c.width,i);
+                i += 50;
+                ctx.stroke();
+            }while(i < get("theCan").height);
+
             ctx.beginPath();
-            ctx.moveTo(0, window.innerHeight / 2);
+            ctx.moveTo(0, 500);
             ctx.lineTo(x, y);
             ctx.closePath();
             ctx.stroke();
