@@ -1,96 +1,244 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Chet's</title>
-    <style>
-        table, td{
-            border: 1px solid black;
-            border-collapse: collapse;
-        }
-        #databox {
-            height: 80px;
-        }
-    </style>
-    <script>
+    <head>
+        <title>EmulatorJS</title>
 
-        var number = [];
-        let i = 0;
-        let d = 0;
-        var rebmun = []
-        var start = new Date("June 1, 2023");
-        var DOfWeek = start.getDay();
-        var startDate = start.getDate();
+        <link rel = icon href = docs/favicon.ico sizes = "16x16 32x32 48x48 64x64" type = image/vnd.microsoft.icon>
+        <meta name = viewport content = "width = device-width, initial-scale = 1">
 
-        function get(id){
-            return document.getElementById(id);
-        }
-
-
-
-        function onStart(){
-            var calanderTable = document.createElement("table");
-            calanderTable.id = "theTable";
-            calanderTable.style = "border: 1px solid black; border-collapse: collapse; width:100%; height: 100%;";
-            document.body.append(calanderTable);
-            //When the page loads, the dates on the calendar are set with this loop
-            do{
-
-                number[i] = [startDate];
-                start.setDate(startDate + 1)
-                startDate = start.getDate();
-                get(i).innerHTML = number[i];
-
-                rebmun[startDate] = i;
-                i = i + 1
-            }while(i < 14);
-        }
-
-        function doForm(){
-            var enteredEvent = get("entered-event").value;
-            var enteredDate = parseInt(get("entered-date").value);
-            if(rebmun[enteredDate +1]){
-                get(rebmun[enteredDate +1]).innerHTML = enteredDate + ": " + enteredEvent;
-            }else{
-                alert("Date " + enteredDate + " is not a valid date.");
+        <style>
+            body, html {
+                height: 100%;
             }
-        }
-    </script>
-</head>
-<body onload="onStart()">
-    <table style="width:100%" id="table">
-        <tr>
-            <td>Sunday</td>
-            <td>Monday</td>
-            <td>Tuesday</td>
-            <td>Wednesday</td>
-            <td>Thursday</td>
-            <td>Friday</td>
-            <td>Saturday</td>
-        </tr>
-        <tr id="databox">
-            <td id = "0"></td>
-            <td id = "1"></td>
-            <td id = "2"></td>
-            <td id = "3"></td>
-            <td id = "4"></td>
-            <td id = "5"></td>
-            <td id = "6"></td>
-        </tr>
-        <tr id="databox">
-            <td id = "7"></td>
-            <td id = "8"></td>
-            <td id = "9"></td>
-            <td id = "10"></td>
-            <td id = "11"></td>
-            <td id = "12"></td>
-            <td id = "13"></td>
-        </tr>
-    </table>
 
-    <label for="entered-event">Event:</label><br>
-    <input type="text" id="entered-event"><br>
-    <label for="entered-date">Date:</label><br>
-    <input type="text" id="entered-date"><br><br>
-    <input type="submit" value="Submit" onclick="doForm()">
-</body>
+            body {
+                font-family: monospace;
+                font-weight: bold;
+                font-size: 20px;
+                margin: 0;
+                overflow: hidden;
+                background-color: #222
+            }
+
+            body, #box {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            #box {
+                color: #aaa;
+                height: 20em;
+                width: 30em;
+                max-width: 80%;
+                max-height: 80%;
+                background-color: #333;
+                border-radius: 0.4em;
+                border: 2px solid #555;
+                position: relative;
+                flex-direction: column;
+                transition-duration: 0.2s;
+                overflow: hidden
+            }
+
+            #box:hover, #box[drag] {
+                border-color: #38f;
+                color: #ddd
+            }
+
+            #input {
+                cursor: pointer;
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                opacity: 0
+            }
+
+            #display {
+                width: 100%;
+                height: 100%
+            }
+
+            select, button {
+                padding: 0.6em 0.4em;
+                margin: 0.5em;
+                width: 15em;
+                max-width: 100%;
+                font-family: monospace;
+                font-weight: bold;
+                font-size: 16px;
+                background-color: #444;
+                color: #aaa;
+                border-radius: 0.4em;
+                border: 1px solid #555;
+                cursor: pointer;
+                transition-duration: 0.2s
+            }
+
+            select:hover, button:hover {
+                background-color: #666;
+                color: #ddd
+            }
+        </style>
+    </head>
+
+    <body>
+        <div id = box>
+            <input type = file id = input>
+            Drag ROM file or click here
+        </div>
+
+        <script>
+            input.onchange = async () => {
+                const url = new Blob([input.files[0]])
+                const parts = input.files[0].name.split(".")
+
+                const core = await (async (ext) => {
+                    if (["fds", "nes", "unif", "unf"].includes(ext))
+                        return "nes"
+
+                    if (["smc", "fig", "sfc", "gd3", "gd7", "dx2", "bsx", "swc"].includes(ext))
+                        return "snes"
+
+                    if (["z64", "n64"].includes(ext))
+                        return "n64"
+
+                    if (["pce"].includes(ext))
+                        return "pce"
+
+                    if (["ngp", "ngc"].includes(ext))
+                        return "ngp"
+
+                    if (["ws", "wsc"].includes(ext))
+                        return "ws"
+
+                    if (["col", "cv"].includes(ext))
+                        return "coleco"
+
+                    if (["d64"].includes(ext))
+                        return "vice_x64"
+
+                    if (["nds", "gba", "gb", "z64", "n64"].includes(ext))
+                        return ext
+
+                    return await new Promise(resolve => {
+                        const cores = {
+                            "Nintendo 64": "n64",
+                            "Nintendo Game Boy": "gb",
+                            "Nintendo Game Boy Advance": "gba",
+                            "Nintendo DS": "nds",
+                            "Nintendo Entertainment System": "nes",
+                            "Super Nintendo Entertainment System": "snes",
+                            "PlayStation": "psx",
+                            "Virtual Boy": "vb",
+                            "Sega Mega Drive": "segaMD",
+                            "Sega Master System": "segaMS",
+                            "Sega CD": "segaCD",
+                            "Atari Lynx": "lynx",
+                            "Sega 32X": "sega32x",
+                            "Atari Jaguar": "jaguar",
+                            "Sega Game Gear": "segaGG",
+                            "Sega Saturn": "segaSaturn",
+                            "Atari 7800": "atari7800",
+                            "Atari 2600": "atari2600",
+                            "NEC TurboGrafx-16/SuperGrafx/PC Engine": "pce",
+                            "NEC PC-FX": "pcfx",
+                            "SNK NeoGeo Pocket (Color)": "ngp",
+                            "Bandai WonderSwan (Color)": "ws",
+                            "ColecoVision": "coleco",
+                            "Commodore 64": "vice_x64"
+                        }
+
+                        const button = document.createElement("button")
+                        const select = document.createElement("select")
+
+                        for (const type in cores) {
+                            const option = document.createElement("option")
+
+                            option.value = cores[type]
+                            option.textContent = type
+                            select.appendChild(option)
+                        }
+
+                        button.onclick = () => resolve(select[select.selectedIndex].value)
+                        button.textContent = "Load game"
+                        box.innerHTML = ""
+
+                        box.appendChild(select)
+                        box.appendChild(button)
+                    })
+                })(parts.pop())
+
+                const div = document.createElement("div")
+                const sub = document.createElement("div")
+                const script = document.createElement("script")
+
+                sub.id = "game"
+                div.id = "display"
+
+                box.remove()
+                div.appendChild(sub)
+                document.body.appendChild(div)
+
+                window.EJS_player = "#game";
+                window.EJS_gameName = parts.shift();
+                window.EJS_biosUrl = "";
+                window.EJS_gameUrl = url;
+                window.EJS_core = core;
+                window.EJS_pathtodata = "data/";
+                window.EJS_startOnLoaded = true;
+
+                if (window.location.hostname === "demo.emulatorjs.org") {
+                    window.EJS_AdUrl = "https://ads.emulatorjs.org/";
+                    window.EJS_ready = function() {
+                        detectAdBlock("data:text/html;base64,PGh0bWw+PHN0eWxlPiNhZGJsb2Nre2JhY2tncm91bmQtY29sb3I6cmdiYSgwLDAsMCwuOCk7cG9zaXRpb246Zml4ZWQ7d2lkdGg6MTAwJTtoZWlnaHQ6MTAwJTt0b3A6MDtsZWZ0OjA7ei1pbmRleDoxMDAwO3RleHQtYWxpZ246Y2VudGVyO2NvbG9yOiNmZmZ9Ym9keSxodG1se2JhY2tncm91bmQtY29sb3I6dHJhbnNwYXJlbnR9PC9zdHlsZT48Ym9keSBzdHlsZT0ibWFyZ2luOjAiPjxkaXYgaWQ9ImFkYmxvY2siPjxoMT5IaSBBZGJsb2NrIFVzZXIhPC9oMT48cD5BZHMgb24gdGhpcyBwYWdlIG1heSBjb21lIGFuZCBnbyBkZXBlbmRpbmcgb24gaG93IG1hbnkgcGVvcGxlIGFyZSBmdW5kaW5nIHRoaXMgcHJvamVjdC48YnI+WW91IGNhbiBoZWxwIGZ1bmQgdGhpcyBwcm9qZWN0IG9uPGEgaHJlZj0iaHR0cHM6Ly9wYXRyZW9uLmNvbS9FbXVsYXRvckpTIj5wYXRyZW9uPC9hPjwvcD48L2Rpdj48L2JvZHk+PC9odG1sPg==");
+                    }
+                }
+                
+                script.src = "data/loader.js";
+                document.body.appendChild(script);
+            }
+            function detectAdBlock(url) {
+                let adBlockEnabled = false;
+                try {
+                    window.EJS_AdUrl = document.querySelector('iframe[src="'+window.EJS_AdUrl+'"]').src;
+                } catch (e) {
+                    adBlockEnabled = true;
+                }
+                if (adBlockEnabled) {
+                    window.EJS_adBlocked(url);
+                }
+            }
+            box.ondragover = () => box.setAttribute("drag", true);
+            box.ondragleave = () => box.removeAttribute("drag");
+        </script>
+        <div style='width:640px;height:480px;max-width:100%'>
+    <div id='game'></div>
+</div>
+
+<script type='text/javascript'>
+    EJS_player = '#game';
+    
+    // Can also be snes9x
+    EJS_core = 'snes';
+    
+    //SNES mouse
+    EJS_mouse = false; 
+    
+    // SNES Multitap
+    EJS_multitap = false; 
+    
+    // URL to BIOS file
+    EJS_biosUrl = '';
+    
+    // URL to Game rom
+    EJS_gameUrl = 'NBA Jam - Tournament Edition (USA).sfc';
+    
+    // Path to the data directory
+    EJS_pathtodata = 'data/';
+</script>
+<script src='data/loader.js'></script>
+    </body>
 </html>
